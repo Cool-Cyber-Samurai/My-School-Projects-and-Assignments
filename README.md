@@ -1,2 +1,2 @@
 # My-School-Projects-and-Assignments
-This will be containing my work from my many IT classes over 5-6 years
+This will be containing my Java work over my college years. I've worked both solo and with a team
