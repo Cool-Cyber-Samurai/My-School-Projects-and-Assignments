@@ -1,0 +1,26 @@
+4.9-4.10
+
+DECLARE
+    CURSOR cur_pledge IS
+        SELECT pd.IDPLEDGE, pd.PLEDGEAMT, pm.PAYMONTHS, pm.PAYDATE, pm.PAYAMT
+		FROM dd_payment pm INNER JOIN dd_pledge pd
+			USING (idpledge)
+		WHERE pd.IDPLEDGE = :g_pledge
+		ORDER BY pd.IDPLEDGE, pm.PAYDATE;
+	TYPE type_pledge IS RECORD (
+	id dd_pledge.IDPLEDGE%TYPE
+	pledamt dd_pledge.PLEDGEAMT%TYPE
+	paymon dd-payment.PAYMONTHS%TYPE
+	payda dd_payment.PAYDATE%TYPE
+	payam dd_payment,PAYAMT%TYPE);
+idple type_pledge;
+BEGIN
+OPEN cur_pledge;
+LOOP
+	FETCH cur_pledge INTO idple;
+	EXIT WHEN cur_pledge%NOTFOUND;
+
+END LOOP;
+CLOSE cur_pledge;
+
+END;

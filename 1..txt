@@ -1,0 +1,64 @@
+1.
+set serveroutput on;
+create or replace
+PROCEDURE STATUS_SHIP_SP
+(IDSTAGE NUMBER, IDBASKET NUMBER, DTSTAGE DATE, SHIPPER VARCHAR2, SHIPPINGNUM VARCHAR2)
+IS 
+BEGIN
+INSERT INTO BB_BASKETSTATUS(IDSTAGE, IDBASKET, DTSTAGE, SHIPPER, SHIPPINGNUM)
+VALUES (IDSTAGE, IDBASKET, DTSTAGE, SHIPPER, SHIPPINGNUM);
+END;
+
+DECLARE
+
+BEGIN
+STATUS_SHIP_SP(3,3,'20-FEB-12','UPS','ZW2384YXK4957');
+
+END;
+
+CREATE OR REPLACE PROCEDURE status_ship_sp
+  (p_basketid IN bb_basketstatus.idbasket%TYPE,
+  p_date IN DATE,
+  p_shipper IN bb_basketstatus.shipper%TYPE,
+  p_shipnum IN bb_basketstatus.shippingnum%TYPE)
+
+
+
+
+chapter 6
+set serveroutput on;
+CREATE OR REPLACE FUNCTION func (posneg IN NUMBER)
+RETURN VARCHAR2
+IS
+BEGIN
+IF posneg > 0 THEN
+return 'Y';
+ELSE
+RETURN 'N';
+END IF;
+RETURN lv_result;
+END;
+
+CREATE OR REPLACE PROCEDURE power2 (p_num IN NUMBER, p_result OUT NUMBER)
+IS
+ex_invalid_num EXCEPTION;
+p_result NUMBER;
+BEGIN
+IF func(p_num) = 'Y' THEN
+FOR i IN 1 . . p_num LOOP
+    p_result := p_result * 2;
+    END LOOP;
+ELSE
+RAISE ex_invalid_num;
+END IF;
+EXCEPTION
+WHEN ex_invalid_num THEN
+DBMS_OUTPUT.PUT_LINE('invalid input');
+END;
+
+DECLARE
+lv_result NUMBER
+
+1,220,000-915,000
+
+

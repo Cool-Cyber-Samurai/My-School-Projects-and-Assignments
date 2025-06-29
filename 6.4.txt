@@ -1,0 +1,129 @@
+6.4
+set serveroutput on
+CREATE FUNCTION day_ord_sp
+(ord_date IN DATE)
+RETURN VARCHAR2
+IS
+lv_date_created bb_basket.dtcreated%TYPE;
+lv_weekday TOCHAR()
+
+--TO_CHAR(n, 'f')
+6.5
+
+CREATE OR REPLACE FUNCTION ord_ship_sf
+  (p_id NUMBER)
+  RETURN VARCHAR2
+  IS
+  lv_ship_txt VARCHAR2(12);
+  lv_ord_dat DATE;
+  lv_ship_dat DATE;
+  lv_days_num NUMBER(2);
+BEGIN
+  SELECT b.dtordered, bs.dtstage
+    INTO lv_ord_dat, lv_ship_dat
+    FROM bb_basket b, bb_basketstatus bs
+    WHERE b.idBasket = bs.idBasket
+      AND bs.idBasket = p_id
+      AND bs.idstage = 5;
+  lv_days_num := lv_ship_dat - lv_ord_dat;
+  IF lv_days_num > 1 THEN
+    lv_ship_txt := 'CHECK';
+  ELSE
+    lv_ship_txt := 'OK';
+  END IF;
+  RETURN lv_ship_txt;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    lv_ship_txt := 'Not shipped';
+    RETURN lv_ship_txt;
+END;
+
+DECLARE
+ lv_flag_txt VARCHAR2(12);
+ lv_id_num bb_basket.idbasket%TYPE := 3;
+ BEGIN
+  lv_flag_txt := ord_ship_sf(lv_id_num);
+  DBMS_OUTPUT.PUT_LINE('Basket ' || lv_id_num || ' ' || lv_flag_txt);
+ END;
+
+Andrew McKay
+
+IS
+  lv_start_dat DATE;
+  lv_end_dat DATE;
+  lv_msg_txt VARCHAR2(15);
+BEGIN
+  SELECT salestart, saleend
+    INTO lv_start_dat, lv_end_dat
+    FROM bb_product
+    WHERE idProduct = p_id;
+  IF p_date BETWEEN lv_start_dat AND lv_end_dat THEN
+    lv_msg_txt := 'ON SALE!';
+  ELSE
+    lv_msg_txt := 'Great Deal!';
+  END IF;
+  RETURN lv_msg_txt;
+END;
+ 
+DECLARE
+  lv_msg_txt VARCHAR2(15);
+BEGIN
+  lv_msg_txt := ck_sale_sf(6,'10-JUN-12');
+  DBMS_OUTPUT.PUT_LINE(lv_msg_txt);
+END;
+
+CREATE OR REPLACE FUNCTION dd_projtot_sf
+  (p_id IN dd_project.idproj%TYPE)
+  RETURN NUMBER
+  IS
+  lv_amt_num NUMBER(9,2);
+BEGIN
+  SELECT SUM(pledgeamt)
+    INTO lv_amt_num
+    FROM dd_pledge
+    WHERE idproj = p_id;
+  RETURN lv_amt_num;
+END;
+ 
+SELECT idproj, projname,
+  TO_CHAR(NVL(dd_projtot_sf(idproj),0),'$99,999.00')
+  FROM dd_project;
+
+05/14/2024	05/28/2024
+https://wwwnc.cdc.gov/travel/destinations/traveler/none/japan
+https://masonabroad.gmu.edu/index.cfm?FuseAction=Students.AngularApplication&applicationId=52742
+
+SW2:
+
+Number of Usable Hosts – 2^4 – 2 = 14
+
+Host Bits – 4 bits
+
+Subnet Mask – /28 or 255.255.255.240
+
+Increment – 16
+
+Network Address – 192.168.5.64
+
+Broadcast Address – 192.168.5.79
+
+Usable IP Addresses – 192.168.5.65 to 192.168.5.78
+
+ 
+
+11111111.11111111.11111111.11110000 192.168.5.64 Network Address
+11111111.11111111.11111111.11110001 192.168.5.65 First Usable Address
+11111111.11111111.11111111.11110010 192.168.5.66
+11111111.11111111.11111111.11110011 192.168.5.67
+11111111.11111111.11111111.11110100 192.168.5.68
+1111111.11111111.11111111.11110101 192.168.5.69
+11111111.11111111.11111111.11110110 192.168.5.70
+11111111.11111111.11111111.11110111 192.168.5.71
+11111111.11111111.11111111.11111000 192.168.5.72
+11111111.11111111.11111111.11111001 192.168.5.73
+11111111.11111111.11111111.11111010 192.168.5.74
+11111111.11111111.11111111.11111011 192.168.5.75
+11111111.11111111.11111111.11111100 192.168.5.76
+11111111.11111111.11111111.11111101 192.168.5.77
+11111111.11111111.11111111.11111110 192.168.5.78 Last Usable Address
+11111111.11111111.11111111.11111111 192.168.5.79 Broadcast Address

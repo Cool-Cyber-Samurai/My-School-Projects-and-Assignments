@@ -1,0 +1,72 @@
+CREATE OR REPLACE PACKAGE pledge_pkg
+IS
+FUNCTION dd_paydate1_pf
+(p_id IN dd_pledge.idpledge%TYPE)
+RETURN DATE;
+FUNCTION dd_payend_pf
+ (p_id IN dd_pledge.idpledge%TYPE)
+ RETURN DATE;
+ PROCEDURE dd_plist_pp
+ (p_id IN dd_donor.iddonor%TYPE);
+ END;
+ 
+ CREATE OR REPLACE PACKAGE BODY pledge_pkg
+ IS
+ FUNCTION dd_paydate1_pf
+ (p_id IN dd_pledge.idpledge%TYPE)
+ RETURN DATE
+ IS
+  lv_pl_dat DATE;
+  lv_mth_txt VARCHAR2(2);
+  lv_yr_txt VARCHAR2(4);
+  BEGIN
+  SELECT ADD_MONTHS(pledgedate,1)
+  INTO lv_pl_dat
+  FROM dd_pledge
+  WHERE idpledge = p_id;
+  lv_mth_txt := TO_CHAR(lv_pl_dat,'mm');
+   lv_yr_txt := TO_CHAR(lv_pl_dat,'yyyy');
+   RETURN
+   TO_DATE((lv_mth_txt||'-01-'||lv_yr_txt),'mm-dd-yyyy');
+   END;
+   
+   FUNCTION dd_payend_pf
+    (p_id IN dd_pledge.idpledge%TYPE)
+    RETURN DATE
+    IS
+    lv_pay1_dat DATE;
+    lv_mths_num dd_pledge.paymonths%TYPE;
+    BEGIN
+     SELECT dd_paydate1_sf(idpledge), paymonths - 1
+      INTO lv_pay1_dat, lv_mths_num
+      FROM dd_pledge
+      WHERE idpledge = p_id;
+      IF lv_mths_num < 0 THEN
+      RETURN lv_pay1_dat;
+      ELSE
+      RETURN ADD_MONTHS(lv_pay1_dat, lv_mths_num);
+      END IF;
+      END;
+      
+      PROCEDURE dd_plist_pp
+      (p_id IN dd_donor.iddonor%TYPE)
+      IS
+      CURSOR cur_donor IS
+      SELECT firstname || ' ' || lastname name, idpledge
+      FROM dd_donor JOIN dd_pledge USING(iddonor)
+      WHERE iddonor = p_id;
+      lv_first_dat DATE;
+       lv_last_dat DATE;
+       BEGIN
+       FOR rec_donor IN cur_donor LOOP
+       lv_last_dat := pledge_pkg.dd_payend_pf(rec_donor.idpledge);
+       DBMS_OUTPUT.PUT_LINE(rec_donor.name || ' ' || rec_donor.idpledge|| '  ' || lv_first_dat || '  ' || lv_last_dat);
+       END LOOP
+       END;
+       END;
+      
+      BEGIN
+      pledge_pkg.dd_plist_pp(304);
+      END;
+ 
+ Andrew McKay
