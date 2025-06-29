@@ -1,0 +1,46 @@
+CREATE SEQUENCE MY_FIRST_SEQ
+INCREMENT BY -3
+START WITH 5
+NOMAXVALUE
+MINVALUE 0
+NOCYCLE
+NOORDER
+NOCACHE;
+
+SELECT MAX(COUNT(*))
+FROM author JOIN bookauthors
+USING (authorid)
+GROUP BY isbn 
+HAVING (SELECT isbn
+               FROM orderitems
+               GROUP BY isbn
+               HAVING COUNT(*) = (SELECT MAX(COUNT(*))
+                                        FROM orderitems
+                                        GROUP BY isbn));
+
+SELECT COUNT(DISTINCT customer#)
+FROM orders JOIN orderitems
+USING(order#)
+WHERE authorid = (SELECT AUTHORID
+                FROM orderitems JOIN bookauthor
+                USING(ISBN)
+                JOIN author 
+                USING(authorid)
+                WHERE firstname = 'JAMES' AND lastname = 'Austin');
+10.
+SELECT title
+FROM books
+WHERE pubid =
+            (SELECT(pubid)
+            FROM books 
+            WHERE pubid = 1);
+
+Hands on 12
+1.
+SELECT LAST || ' ' || FIRST "Officer"
+FROM officers JOIN crime_officers
+USING(officer_id)
+GROUP BY crime_id
+WHERE COUNT(crime_id) >
+(SELECT AVG(crime_id)
+FROM crime_officers);

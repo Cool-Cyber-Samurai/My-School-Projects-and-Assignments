@@ -1,0 +1,4 @@
+
+SELECT e.FNAME || ' ' || e.LNAME as "EmployeeName", e.JOB, m.FNAME || ' ' || m.LNAME as "ManagerName", m.MRG
+FROM employees e, employees m
+WHERE e.EMPNO = m.EMPNO;

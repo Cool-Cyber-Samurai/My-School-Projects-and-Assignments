@@ -1,0 +1,7 @@
+SELECT UPPER(FIRST || ' ' || LAST) NAME, charge_id, TO_CHAR(fine_amount + court_fee, '$999.99') "Total Amount Owed", 
+TO_CHAR(amount_paid, '$999.99'), TO_CHAR(fine_amount, '$999.99'), pay_due_date
+FROM CRIMINALS JOIN CRIMES
+USING (Criminal_id)
+JOIN crime_charges
+USING (crime_id)
+WHERE fine_amount IS NOT NULL;

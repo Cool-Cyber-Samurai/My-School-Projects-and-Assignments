@@ -1,0 +1,15 @@
+5.
+SELECT MAX(COUNT(*))
+FROM orderitems
+WHERE ISBN = (SELECT isbn    
+FROM orderitems
+GROUP BY isbn
+HAVING SUM(quantity) = (SELECT MAX(COUNT(*))
+                    FROM orderitems
+                    GROUP BY isbn))
+GROUP BY isbn
+6.
+
+7.
+
+
